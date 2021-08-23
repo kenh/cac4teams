@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# The main driver for cac4teams
+#
+# What happens here is:
+#
+# - If it hasn't been done before, we copy the Microsoft Teams app
+#   to /tmp/cac4teams
+# - Use codesign to extract out the entitlements from Teams, and add
+#   two new entitlements: com.apple.security.smartcard (for smartcard
+#   support) and com.apple.security.cs.allow-dyld-environment-variables
+#   (which allows us to inject the libcac4teams dylib) to the entitlement
+#   file.
+# - Resign the copied Microsoft Teams app with a new signature and
+#   the extra entitlements.
+# - Run the copied Microsoft Teams but inject the libcac4teams.dylib
+#   to replace SecItemCopyMatching().
+#
+
+: ${CAC4TEAMSLIB:=@libdir@/libcac4teams.dylib}
+TMPTEAMS=/tmp/cac4teams
+TEAMSINSTALL="/Applications/Microsoft Teams.app"
+PLB=/usr/libexec/PlistBuddy
+
+set -e
+
+if [ ! -d "$TEAMSINSTALL" ]; then
+	echo "You do not seem to have Microsoft Teams installed"
+	echo "We are looking for $TEAMSINSTALL"
+	exit 1
+fi
+
+if [ ! -e "$TMPTEAMS/Contents/MacOS/Teams" ]; then
+	rm -rf "$TMPTEAMS"
+	ditto "$TEAMSINSTALL" "$TMPTEAMS"
+	rm -f /tmp/teams.plist
+	codesign -d --entitlements :/tmp/teams.plist "$TMPTEAMS"
+	$PLB -c "Add :com.apple.security.smartcard bool true" \
+							/tmp/teams.plist
+	$PLB -c "Add :com.apple.security.cs.allow-dyld-environment-variables bool true" \
+							/tmp/teams.plist
+	codesign -fs - -o runtime --deep "$TMPTEAMS"
+fi
+
+DYLD_INSERT_LIBRARIES=$CAC4TEAMSLIB "$TMPTEAMS/Contents/MacOS/Teams" "$@"
