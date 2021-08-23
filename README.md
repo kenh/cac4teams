@@ -99,7 +99,7 @@ has the ability to intercept any dynamically loaded function.
 
 But applications that are enrolled in the hardened runtime environment
 do not permit the use of environment variables to modify the behavior
-of the dyanmic linker (unless specifically permitted by entitlements;
+of the dyanmic linker (unless specifically permitted by entitlements);
 I personally haven't ever encountered an application that permits
 this via entitlements, and the Teams app definitely does not.  So it's
 not something you can do under ordinary circumstances.
@@ -120,3 +120,110 @@ following things:
   `DYLD_INSERT_LIBRARIES` environment variable pointing to a special
   shared library which does the appropriate adjustment to the
   `SecItemCopyMatching()` dictionary mentioned previously.
+
+## Yikes.  That all seems like ... a lot.  It's not that I don't trust you or anything ...
+
+No, no, it's okay. I understand.
+
+The best thing I can tell you is take a look at the source code.  It is
+actually quite small!  The shell script source code is
+[here](https://github.com/kenh/cac4teams/blob/main/src/cac4teams.in) and
+the shared library shim is
+[here.](https://github.com/kenh/cac4teams/blob/main/src/cac4teams.c)
+It really is a small amount of code.
+
+If you feel uncomfortable about running the ad-hoc signed copy of Teams
+from `/tmp`, I did discover that your identity token is cached for an
+unknown amount of time by the application.  So you CAN run `cac4teams`,
+log in with your smartcard, quit the `cac4teams` copy of Teams and
+then launch the real copy of Teams and it will use your saved identity
+token.  I only tested that with Navy Flank Speed; how that works on other
+instances of Teams is unknown.
+
+I realize it's not possible to know if the pre-built binary package
+actually corresponds to that source code unless you disassemble the
+library, and most people won't be capable of doing that.  The installers
+are provided as a service to the community to make distribution easier,
+but I encourage anyone who unsure about the installer to build the package
+theirself.  You'll need XCode or the Command Line Developer Tools
+installed to do that.  Note that if you wish to build your own installer
+package all of the tooling is in the `Makefile` (see the `product` and
+`notarize` targets) but you'll need both a Developer ID Application and a
+Developer ID Installer identity from Apple in your Keychain to create a
+signed and notarized package.  See `configure --help` for more information
+on how to specify those identities.
+
+## Instead of writing this thing, did you try submitting this bug to Microsoft?
+
+Well, I **did** try but I ran into a problem right away, which is that
+I couldn't figure how to do that.
+
+If you select "Help" in Microsoft Teams, it just pulls up a generic help
+page in the application that has things like "What to do if you have
+trouble logging in".  There was no place to submit bug reports that
+I could find.  I looked around the Microsoft web site, but there didn't
+seem to be a way to submit bugs for Teams (there was a "submit comments
+about Teams, but that didn't seem like a place for bug reports).
+
+I asked my management chain if there was a way to contact Microsoft through
+official DoD channels, and everyone pretty much said ¯\_(ツ)_/¯.
+
+I understand that Microsoft takes this approach to cut down on support
+costs, but it does make submitting bugs difficult.
+
+## Couldn't you have started at the Help Desk and pushed it that way?
+
+Well, have you ever TRIED doing that?  In my experience when dealing with
+problems like this and large organizations it is very difficult to
+get problems like this past bureaucratic intertia and into the hands
+of the appropriate developers.
+
+Let's take a completely, made-up example, which is in no way related to
+any real-world events.  Let's say you are trying to get a DoD PKI
+certificate issued with an `id-pkinit-san` SubjectAlterateName, which
+the NPE portal claims it supports.  But when you get the signed
+certificate back it doesn't work at all.  So after a few days of
+staring at the output of `openssl asn1parse` and reading multiple
+RFCs, you find that the ASN.1 explicit tags for the `KRB5PrincipalName`
+field are all 0 where they should be 1, in violation of
+[RFC 4556](https://datatracker.ietf.org/doc/html/rfc4556.html).  So you
+figure this is a very clear bug, and you decide to work the system
+the proper way.  So you write up some very long and hopefully clear
+emails and you start working it up the management chain, starting at your
+local security office, and eventually you get punted to someone
+at DISA who seems to understand your bug, you start a dialog ... and
+you end up getting completely ghosted, with the bug never getting
+fixed at all.
+
+It is incredibly demoralizing and depressing to go through all of the
+effort to document and submit a bug through multiple levels of
+bureaucracy only to get radio silence.  So I decided to focus my
+energy on creating a solution rather than just complain about the problem.
+
+I would again like the emphasize the above scenario is COMPLETELY
+hypothetical and absolutely DID NOT happen to me.
+
+## Um, okay. So there's no hope in getting this bug fixed?
+
+Well, if I am being COMPLETELY honest what I am hoping is that eventually
+this package makes its way to the developers at Microsoft and the bug is
+quietly fixed
+and rolled out in a subsequent releae of Teams.  I know that sounds
+farfetched, but
+[stranger things have happened](https://github.com/kenh/keychain-pkcs11/commit/b3d2d3245153a3280eda890500b11b2b7613de7b).
+
+## I don't quite feel comfortable running this software package, but I'd still like to help somehow.  Is there anything I can do?
+
+Yes! If you could try to run this down via the management chain at YOUR
+organization, that would be incredibly helpful. My impression is that
+the more people that complain about a problem, the better.  Don't make
+the case that you're asking for a feature request; this is obviously
+a bugfix.
+
+## This seems like a heck of a way to run a railroad
+
+[Yes. Yes it is.](https://www.youtube.com/watch?v=TNBR2Js1dH0)
+
+## Author
+
+* **Ken Hornstein** - [kenh@cmf.nrl.navy.mil](mailto:kenh@cmf.nrl.navy.mil)
