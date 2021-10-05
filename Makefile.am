@@ -8,11 +8,13 @@
 AM_CFLAGS = -Wall
 
 bin_SCRIPTS = cac4teams
+noinst_PROGRAMS = teamscache
 CLEANFILES = $(bin_SCRIPTS)
 
 EXTRA_DIST = \
 	src/cac4teams.in \
 	README.md \
+	packaging/entitlements.plist \
 	#
 
 lib_LTLIBRARIES = libcac4teams.la
@@ -26,6 +28,11 @@ libcac4teams_la_LDFLAGS = \
 		-avoid-version \
 		-framework Security \
 		#
+
+teamscache_SOURCES = \
+		src/teamscache.c \
+		#
+teamscache_LDFLAGS = -framework Security -framework CoreFoundation
 
 do_subst = ( sed \
 	-e 's,[@]libdir[@],$(libdir),g' \
