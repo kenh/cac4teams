@@ -110,16 +110,20 @@ So what is happening is `cac4teams` is a shell script which does the
 following things:
 
 * It copies the entire Teams application into `/tmp`.
-* It extracts the existing entitlements used by Teams and adds two new
+* ~~It extracts the existing entitlements used by Teams and adds two new
   ones: `com.apple.security.smartcard` for smartcard access and
   `com.apple.security.cs.allow-dyld-environment-variables` to allow
-  the use of dyld environment variables to permit interposing.
+  the use of dyld environment variables to permit interposing.~~
 * It signs the copy of Teams in `/tmp` using an ad-hoc signature
-  with the extra entitlements added.
+  ~~with the extra entitlements added.~~
 * It then runs the copy of Teams in `/tmp` with the special
   `DYLD_INSERT_LIBRARIES` environment variable pointing to a special
   shared library which does the appropriate adjustment to the
   `SecItemCopyMatching()` dictionary mentioned previously.
+
+(Sigh.  I tried doing the right thing, but it turns out that I could never
+reliably get that to work.  So, the shell script ends up not enrolling the
+temporary copy of Teams in the hardened runtime environment).
 
 ## Yikes.  That all seems like ... a lot.  It's not that I don't trust you or anything ...
 

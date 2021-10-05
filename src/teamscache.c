@@ -18,7 +18,6 @@ main(int argc, char *argv[])
 	CFMutableDictionaryRef query = NULL;
 	CFMutableDataRef databuf = NULL;
 	CFTypeRef result = NULL;
-	SecKeychainRef keychain = NULL;
 	OSStatus ret;
 	int c;
 	FILE *data;
