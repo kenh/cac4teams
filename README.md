@@ -153,6 +153,12 @@ Developer ID Installer identity from Apple in your Keychain to create a
 signed and notarized package.  See `configure --help` for more information
 on how to specify those identities.
 
+## I tried running this thing, but I get a whole lot of warnings on the command line
+
+Yeah, it turns out that if you run Teams from the command line, you get a
+whole pile of warnings, even without `cac4teams`.  You just normally don't
+see all of those warnings because they're hidden by the MacOS X Finder.
+
 ## Instead of writing this thing, did you try submitting this bug to Microsoft?
 
 Well, I **did** try but I ran into a problem right away, which is that
@@ -166,7 +172,7 @@ seem to be a way to submit bugs for Teams (there was a "submit comments
 about Teams, but that didn't seem like a place for bug reports).
 
 I asked my management chain if there was a way to contact Microsoft through
-official DoD channels, and everyone pretty much said ¯\_(ツ)_/¯.
+official DoD channels, and everyone pretty much said ¯\\_(ツ)_/¯.
 
 I understand that Microsoft takes this approach to cut down on support
 costs, but it does make submitting bugs difficult.

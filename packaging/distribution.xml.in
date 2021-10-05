@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>CAC4TEAMS</title>
+    <options customize="never" hostArchitectures="x86_64,arm64"/>
+    <domains enable_anywhere="false" enable_currentUserHome="false" enable_localSystem="true"/>
+    <volume-check>
+        <allowed-os-versions>
+            <os-version min="10.14"/>
+        </allowed-os-versions>
+    </volume-check>
+    <welcome file="welcome.rtf" mime-type="text/rtf"/>
+    <readme file="readme.rtf" mime-type="text/rtf"/>
+    <conclusion file="conclusion.rtf" mime-type="text/rtf"/>
+    <choice id="@APPIDENTIFIER@.app" visible="true" start_selected="true" title="CAC4TEAMS application"
+        description="The dynamic library and associated man page implementing the PKCS11 interface to the Keychain">
+	<pkg-ref id="@APPIDENTIFIER@.app">@PACKAGE_NAME@-app.pkg</pkg-ref>
+    </choice>
+    <choices-outline>
+        <line choice="@APPIDENTIFIER@.app"/>
+    </choices-outline>
+</installer-gui-script>

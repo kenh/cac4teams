@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+	Entitlements we need to add to executables in our package.
+-->
+<plist version="1.0">
+  <dict>
+    <!--
+	Right now we don't need any entitlements; we're just leaving this
+	here in case I need to add them later.
+    -->
+  </dict>
+</plist>

@@ -5,7 +5,7 @@ dnl
 
 AC_PREREQ([2.69])
 
-AC_INIT([cac4teams], [0.8.0], [kenh@cmf.nrl.navy.mil])
+AC_INIT([cac4teams], [0.8.2], [kenh@cmf.nrl.navy.mil])
 AC_CONFIG_SRCDIR([src/cac4teams.c])
 AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([-Wall foreign subdir-objects 1.16])
@@ -26,5 +26,6 @@ AC_DEFINE_UNQUOTED([APPIDENTIFIER], ["$APPIDENTIFIER"],
 	[Application bundle identifier of package])
 AC_SUBST([APPIDENTIFIER])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile packaging/distribution.xml]
+		[packaging/resources/welcome.rtf:packaging/resources/welcome-in.rtf])
 AC_OUTPUT

@@ -18,7 +18,7 @@
 #
 
 : ${CAC4TEAMSLIB:=@libdir@/libcac4teams.dylib}
-TMPTEAMS=/tmp/cac4teams
+TMPTEAMS="/tmp/cac4teams/Microsoft Teams.app"
 TEAMSINSTALL="/Applications/Microsoft Teams.app"
 PLB=/usr/libexec/PlistBuddy
 
@@ -33,13 +33,24 @@ fi
 if [ ! -e "$TMPTEAMS/Contents/MacOS/Teams" ]; then
 	rm -rf "$TMPTEAMS"
 	ditto "$TEAMSINSTALL" "$TMPTEAMS"
-	rm -f /tmp/teams.plist
-	codesign -d --entitlements :/tmp/teams.plist "$TMPTEAMS"
-	$PLB -c "Add :com.apple.security.smartcard bool true" \
-							/tmp/teams.plist
-	$PLB -c "Add :com.apple.security.cs.allow-dyld-environment-variables bool true" \
-							/tmp/teams.plist
-	codesign -fs - -o runtime --deep "$TMPTEAMS"
+#	rm -f /tmp/teams.plist
+#	codesign -d --entitlements :/tmp/teams.plist "$TMPTEAMS"
+#	$PLB -c "Add :com.apple.security.smartcard bool true" \
+#							/tmp/teams.plist
+##	$PLB -c "Add :com.apple.security.cs.allow-dyld-environment-variables bool true" \
+#							/tmp/teams.plist
+#	find "$TMPTEAMS"/Contents/Frameworks \
+#		-type d \
+#		'(' -name '*.framework' -o -name '*.app' ')' \
+#		-prune \
+#		-exec \
+#			codesign -fs - \
+#				-o runtime \
+#				--entitlements /tmp/teams.plist \
+#				'{}' \;
+#
+#	codesign -fs - -o runtime --entitlements /tmp/teams.plist "$TMPTEAMS"
+	codesign -fs - "$TMPTEAMS" --deep
 fi
 
 DYLD_INSERT_LIBRARIES=$CAC4TEAMSLIB "$TMPTEAMS/Contents/MacOS/Teams" "$@"
