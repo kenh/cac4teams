@@ -15,6 +15,22 @@ window.  If everything is working properly, Teams should come up
 keychain items) and you should be able to use your smartcard to
 authenticate to Teams at the appropriate point.
 
+## I tried that, but it hanged/took a long time when I clicked on "Sign in with CAC/PIV"
+
+If you have a LOT of certificates in your Keychain (especially expired
+ones) MacOS X can take a long time to search through the certificate
+list when making certain Security framework function calls (I have seen
+cases where it can take a couple of minutes).  You can test if this is
+the case if you try to go to CAC-enabled web sites with Safari; does it
+hang or take a long time before you get a client certificate selection
+dialog?  Then this is the problem.
+
+You can try removing the expired certificates from your Keychain,
+but if you don't want to do that or it doesn't help, you can set
+the environment variable `CAC4TEAMS_NOISSUERS` to `y` when running
+`cac4teams`.  This will cause `cac4teams` to remove the issuer list from
+the query dictionary and should speed up the call significantly.
+
 ## Um, wait.  How does this work?  You added Smartcard support to the Teams app??
 
 Well, SINCE you're asking ... not exactly.
