@@ -5,7 +5,7 @@ dnl
 
 AC_PREREQ([2.69])
 
-AC_INIT([cac4teams], [0.8.3], [kenh@cmf.nrl.navy.mil])
+AC_INIT([cac4teams], [0.8.4], [kenh@cmf.nrl.navy.mil])
 AC_CONFIG_SRCDIR([src/cac4teams.c])
 AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([-Wall foreign subdir-objects 1.16])
