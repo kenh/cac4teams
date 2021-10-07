@@ -90,6 +90,21 @@ cac4teams_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef *result)
 
 	CFDictionaryAddValue(modquery, kSecAttrCanSign, kCFBooleanTrue);
 
+	/*
+	 * If you have a LOT of certificates in your Keychain, any call
+	 * to SecItemCopyMatching with an issuer list can take a long time.
+	 * So if you have the environment variable CAC4TEAMS_NOISSUERS
+	 * set, strip out the issuer list.  To prevent other identities
+	 * from showing up, restrict identities to smartcards only.
+	 */
+
+	if (getenv("CAC4TEAMS_NOISSUERS")) {
+		CFDictionaryRemoveValue(modquery, kSecMatchIssuers);
+		CFDictionaryAddValue(modquery, kSecAttrAccessGroup,
+				     kSecAttrAccessGroupToken);
+		logdict(debug, "No-issuer dictionary", modquery);
+	}
+
 skipmodify:
 
 	ret = SecItemCopyMatching(modquery ? modquery : query, result);
